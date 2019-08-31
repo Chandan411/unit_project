@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (firebaseAuth.getCurrentUser() != null) {
             //user is already logged in
-            startActivity(new Intent(this, ProfileActivity.class));
+            //finish();
+            //startActivity(new Intent(this, ProfileActivity.class));
+            Log.d("test", "inside get current user");
         }
 
         progressDialog = new ProgressDialog(this);
@@ -54,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void LoginUser() {
+
         String email = txt_email.getText().toString().trim();
-        final String password = txt_password.getText().toString().trim();
+        String password = txt_password.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             //email is empty
@@ -72,14 +75,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog.setMessage("Registering please wait...");
         progressDialog.show();
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             //Registration success & start login activity
-                            Log.d("Firebase", "Successfully Registered");
-                            progressDialog.hide();
+                            Log.d("Firebase", "Login Successful...");
+                            //progressDialog.hide();
                             Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             Toast.makeText(MainActivity.this, "Login failed...try again", Toast.LENGTH_SHORT).show();
                             progressDialog.hide();
-                            txt_password.setText("");
+                            txt_password.getText().clear();
                         }
                     }
                 });
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view == login) {
             LoginUser();
+            progressDialog.hide();
         }
         if (view == signup) {
             //will open register activity
