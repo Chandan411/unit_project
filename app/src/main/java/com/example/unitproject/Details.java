@@ -8,8 +8,9 @@ public class Details {
     private Date dob;
     private long mobile;
     private int personal_number;
+    
 
-    public Details(String name, int personal_number, long mobile, String dob, int address) {
+    public Details() {
 
     }
 
