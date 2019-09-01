@@ -23,6 +23,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     FloatingActionButton floatingActionButton;
     EditText txt_name, txt_personal_no, txt_mobile, txt_dob, txt_address;
@@ -60,6 +65,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         btn_save.setOnClickListener(this);
         floatingActionButton.setOnClickListener(this);
+        txt_viewDetails.setOnClickListener(this);
     }
 
     private boolean validateInputs(String name, String personal_no, String mobile, String dob, String address) {
@@ -68,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             return true;
         }
         if (personal_no.isEmpty()) {
-            txt_personal_no.setError("Persnal Number Required");
+            txt_personal_no.setError("Personal Number Required");
             return true;
         }
         if (mobile.isEmpty()) {
@@ -86,54 +92,67 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
+    public void saveDetails() {
+        String name = txt_name.getText().toString().trim();
+        String personal_number = txt_personal_no.getText().toString().trim();
+        String mobile = txt_mobile.getText().toString().trim();
+        String dob = txt_dob.getText().toString().trim();
+        String address = txt_address.getText().toString().trim();
+
+        if (!validateInputs(name, personal_number, mobile, dob, address)) {
+            CollectionReference dbDetails = firestore.collection("details");
+            try {
+
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = df.parse(dob);
+
+                Details details = new Details(
+                        name,
+                        Integer.parseInt(personal_number),
+                        Long.parseLong(mobile),
+                        date,
+                        address
+                );
+
+                dbDetails.add(details)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(ProfileActivity.this, "Details Added Successfully", Toast.LENGTH_SHORT).show();
+                                txt_name.getText().clear();
+                                txt_personal_no.getText().clear();
+                                txt_dob.getText().clear();
+                                txt_mobile.getText().clear();
+                                txt_address.getText().clear();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void onClick(View view) {
         if (view == btn_save) {
-            String name = txt_name.getText().toString().trim();
-            String personal_number = txt_personal_no.getText().toString().trim();
-            String mobile = txt_mobile.getText().toString().trim();
-            String dob = txt_dob.getText().toString().trim();
-            String address = txt_address.getText().toString().trim();
-
-            if (!validateInputs(name, personal_number, mobile, dob, address)) {
-                CollectionReference dbDetails = firestore.collection("details");
-                try {
-                    Details details = new Details(
-                            name,
-                            Integer.parseInt(personal_number),
-                            mobile,
-                            dob,
-                            address
-                    );
-
-                    dbDetails.add(details)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Toast.makeText(ProfileActivity.this, "Details Added Successfully", Toast.LENGTH_SHORT).show();
-                                    txt_name.getText().clear();
-                                    txt_personal_no.getText().clear();
-                                    txt_dob.getText().clear();
-                                    txt_mobile.getText().clear();
-                                    txt_address.getText().clear();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                } catch (NumberFormatException e) {
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
+            saveDetails();
         }
         if (view == floatingActionButton) {
             add_detail_layout.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.FadeIn)
                     .duration(700)
                     .playOn(add_detail_layout);
+        }
+        if (view == txt_viewDetails) {
+            Toast.makeText(this, "view details clicked", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,19 +1,26 @@
 package com.example.unitproject;
 
+import java.util.Date;
+
 public class Details {
-    private String name, address, dob, mobile;
+    private String name;
+    private String address;
+    private Date dob;
+    private long mobile;
     private int personal_number;
 
-    public Details(String name, int personal_number, String mobile, String dob, int address) {
+    public Details(String name, int personal_number, long mobile, String dob, int address) {
 
     }
 
-    public Details(String name, int personal_number, String mobile, String dob, String address) {
+    public Details(String name, int personal_number, long mobile, Date dob, String address) {
         this.name = name;
-        this.address = address;
-        this.dob = dob;
         this.personal_number = personal_number;
         this.mobile = mobile;
+        this.dob = dob;
+        this.address = address;
+
+
     }
 
     public String getName() {
@@ -24,7 +31,7 @@ public class Details {
         return address;
     }
 
-    public String getDob() {
+    public Date getDob() {
         return dob;
     }
 
@@ -32,7 +39,7 @@ public class Details {
         return personal_number;
     }
 
-    public String getMobile() {
+    public long getMobile() {
         return mobile;
     }
 }
