@@ -10,68 +10,41 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
+public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAdapter.DetailsHolder> {
 
-    private Context mCtx;
-    private List<Details> detailsList;
+    public DetailsAdapter(@NonNull FirestoreRecyclerOptions<Details> options) {
+        super(options);
+    }
 
-    public DetailsAdapter(Context mCtx, List<Details> detailsList) {
-        this.mCtx = mCtx;
-        this.detailsList = detailsList;
-
+    @Override
+    protected void onBindViewHolder(@NonNull DetailsHolder detailsHolder, int position, @NonNull Details details) {
+        detailsHolder.name.setText(details.getName());
+        detailsHolder.address.setText(details.getAddress());
     }
 
     @NonNull
     @Override
-    public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new DetailsViewHolder(
-                LayoutInflater.from(mCtx).inflate(R.layout.layout_details, parent, false)
-        );
+    public DetailsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_details,parent,false);
+        return new DetailsHolder(v);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull DetailsViewHolder holder, int position) {
-        Details details = detailsList.get(position);
-        holder.textViewName.setText(details.getName());
-        holder.textViewPersonal.setText(details.getPersonal_number());
-        holder.textViewMobile.setText((int) details.getMobile());
-        holder.textViewDob.setText("INR " + details.getDob());
-        holder.textViewAddress.setText("Available Units: " + details.getAddress());
+    class DetailsHolder extends RecyclerView.ViewHolder {
 
+        TextView name,personal_no,mobile,dob,address;
 
-    }
+        public DetailsHolder(View itemview){
 
-    @Override
-    public int getItemCount() {
-        return detailsList.size();
-    }
+            super(itemview);
+            name = itemview.findViewById(R.id.textview_name);
+            address = itemview.findViewById(R.id.textview_address);
 
-    public class DetailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        TextView textViewName, textViewPersonal, textViewMobile, textViewDob, textViewAddress;
-
-
-        public DetailsViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            textViewName = itemView.findViewById(R.id.textview_name);
-            textViewPersonal = itemView.findViewById(R.id.textview_personal_no);
-            textViewMobile = itemView.findViewById(R.id.textview_mobile);
-            textViewDob = itemView.findViewById(R.id.textview_dob);
-            textViewAddress = itemView.findViewById(R.id.textview_address);
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            Details details = detailsList.get(getAdapterPosition());
-            Intent intent = new Intent(mCtx, ShowDetailsActivity.class);
-            intent.putExtra("details", (Serializable) details);
-            mCtx.startActivity(intent);
         }
     }
 }

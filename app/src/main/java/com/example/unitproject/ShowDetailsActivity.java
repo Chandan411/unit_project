@@ -9,9 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -19,51 +22,50 @@ import java.util.List;
 
 public class ShowDetailsActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    ProgressBar progressBar;
-    private DetailsAdapter adapter;
-    private List<Details> detailsList;
+    private FirebaseFirestore db;
+    private CollectionReference detailsRef;
 
-    private FirebaseFirestore firestore;
+    private DetailsAdapter adapter;
+
+    RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_details);
+        
 
-        firestore = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
+        detailsRef =  db.collection("details");
 
-        progressBar = findViewById(R.id.progressbar);
+        setUpRecyclerView();
+    }
 
-        recyclerView = findViewById(R.id.recyclerview_details);
+    private void setUpRecyclerView() {
+        Query query = detailsRef.orderBy("name",Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<Details> options = new FirestoreRecyclerOptions.Builder<Details>()
+                .setQuery(query,Details.class)
+                .build();
+
+        adapter = new DetailsAdapter(options);
+
+        recyclerView  = findViewById(R.id.recyclerview_details);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        detailsList = new ArrayList<>();
-        adapter = new DetailsAdapter(this, detailsList);
-
         recyclerView.setAdapter(adapter);
 
-        firestore.collection("details").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+    }
 
-                        progressBar.setVisibility(View.GONE);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
 
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            //Document is not empty
-                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-
-                            for (DocumentSnapshot documentSnapshot : list) {
-
-                                Details details = documentSnapshot.toObject(Details.class);
-                                detailsList.add(details);
-
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                });
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }
