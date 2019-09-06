@@ -18,39 +18,37 @@
                 android:id="@+id/textview_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nokia X6"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/textview_personal_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nokia"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textview_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="6GB Ram Snapdragon 660 SOC, 64gb Storage"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/textview_dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="INR 15000"
-                android:textSize="32sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/textview_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Available Units: 5"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textStyle="bold" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

@@ -1,7 +1,5 @@
 package com.example.unitproject;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.io.Serializable;
-import java.util.List;
-
 public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAdapter.DetailsHolder> {
 
     public DetailsAdapter(@NonNull FirestoreRecyclerOptions<Details> options) {
@@ -24,8 +19,12 @@ public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAda
 
     @Override
     protected void onBindViewHolder(@NonNull DetailsHolder detailsHolder, int position, @NonNull Details details) {
-        detailsHolder.name.setText(details.getName());
-        detailsHolder.address.setText(details.getAddress());
+        detailsHolder.name.setText("Name : " + details.getName());
+        detailsHolder.personal_no.setText("Personal No : " + details.getPersonal_number());
+        detailsHolder.mobile.setText("Mobile : " + details.getMobile());
+        detailsHolder.dob.setText("DOB : " + details.getDob());
+        detailsHolder.address.setText("Address : " + details.getAddress());
+
     }
 
     @NonNull
@@ -43,7 +42,11 @@ public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAda
 
             super(itemview);
             name = itemview.findViewById(R.id.textview_name);
+            personal_no = itemview.findViewById(R.id.textview_personal_no);
+            mobile = itemview.findViewById(R.id.textview_mobile);
+            dob = itemview.findViewById(R.id.textview_dob);
             address = itemview.findViewById(R.id.textview_address);
+
 
         }
     }

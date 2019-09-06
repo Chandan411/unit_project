@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UnitProject</string>
+    <string name="dob">DOB :</string>
 </resources>
