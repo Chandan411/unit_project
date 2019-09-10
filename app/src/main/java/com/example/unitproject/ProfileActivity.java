@@ -27,14 +27,15 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
-    FloatingActionButton floatingActionButton;
+    FloatingActionButton floatingActionButton, fab2;
     EditText txt_name, txt_personal_no, txt_mobile, txt_dob, txt_address;
-    Button btn_save;
-    TextView txt_viewDetails;
-    LinearLayout add_detail_layout;
+    Button btn_save, btn_present, btn_civil;
+    TextView txt_viewDetails, txt_dateTime;
+    LinearLayout add_detail_layout, attendace_layout;
     private Toolbar mTopToolbar;
     private FirebaseFirestore firestore;
 
@@ -61,12 +62,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btn_save = findViewById(R.id.button_save);
         txt_viewDetails = findViewById(R.id.textview_view_details);
         floatingActionButton = findViewById(R.id.fab);
+        fab2 = findViewById(R.id.fab2);
         add_detail_layout = findViewById(R.id.layout_profile_detail);
+        attendace_layout = findViewById(R.id.layout_attendance);
+        txt_dateTime = findViewById(R.id.current_date_view);
+        btn_present = findViewById(R.id.pv);
+        btn_civil = findViewById(R.id.pw);
 
 
         btn_save.setOnClickListener(this);
+        btn_present.setOnClickListener(this);
+        btn_civil.setOnClickListener(this);
         floatingActionButton.setOnClickListener(this);
         txt_viewDetails.setOnClickListener(this);
+        fab2.setOnClickListener(this);
     }
 
     private boolean validateInputs(String name, String personal_no, String mobile, String dob, String address) {
@@ -141,16 +150,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public void captureDateTime() {
+        Date currentTime = Calendar.getInstance().getTime();
+        txt_dateTime.setText("Date & Time : " + currentTime);
+    }
+
     @Override
     public void onClick(View view) {
         if (view == btn_save) {
             saveDetails();
+        }
+
+        if (view == btn_present || view == btn_civil) {
+            captureDateTime();
         }
         if (view == floatingActionButton) {
             add_detail_layout.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.FadeIn)
                     .duration(700)
                     .playOn(add_detail_layout);
+        }
+
+        if (view == fab2) {
+            add_detail_layout.setVisibility(View.GONE);
+            attendace_layout.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.FadeIn)
+                    .duration(700)
+                    .playOn(attendace_layout);
+
         }
         if (view == txt_viewDetails) {
             // Toast.makeText(this, "view details clicked", Toast.LENGTH_SHORT).show();
