@@ -42,6 +42,7 @@
                 android:textAllCaps="true"
                 android:textColor="#FFFF" />
 
+
             <EditText
                 android:id="@+id/edittext_personal_no"
                 android:layout_width="match_parent"
@@ -129,7 +130,7 @@
             android:visibility="visible">
 
             <Button
-                android:id="@+id/pv"
+                android:id="@+id/present"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -139,7 +140,7 @@
                 android:textColor="#fff" />
 
             <Button
-                android:id="@+id/pw"
+                android:id="@+id/civil"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

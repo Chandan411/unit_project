@@ -66,8 +66,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         add_detail_layout = findViewById(R.id.layout_profile_detail);
         attendace_layout = findViewById(R.id.layout_attendance);
         txt_dateTime = findViewById(R.id.current_date_view);
-        btn_present = findViewById(R.id.pv);
-        btn_civil = findViewById(R.id.pw);
+        btn_present = findViewById(R.id.present);
+        btn_civil = findViewById(R.id.civil);
 
 
         btn_save.setOnClickListener(this);
@@ -166,6 +166,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (view == floatingActionButton) {
             add_detail_layout.setVisibility(View.VISIBLE);
+            attendace_layout.setVisibility(View.GONE);
             YoYo.with(Techniques.FadeIn)
                     .duration(700)
                     .playOn(add_detail_layout);
