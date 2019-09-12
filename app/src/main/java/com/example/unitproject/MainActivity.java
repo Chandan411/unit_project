@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Show progress bar
         progressDialog.setMessage("Registering please wait...");
-        progressDialog.show();
+        // progressDialog.show();
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
