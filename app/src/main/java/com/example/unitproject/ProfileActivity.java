@@ -166,6 +166,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (view == floatingActionButton) {
             add_detail_layout.setVisibility(View.VISIBLE);
+            attendace_layout.setVisibility(View.GONE);
             YoYo.with(Techniques.FadeIn)
                     .duration(700)
                     .playOn(add_detail_layout);
