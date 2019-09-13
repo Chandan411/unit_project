@@ -32,15 +32,14 @@
             android:padding="16dp"
             android:visibility="gone">
 
-            <Button
-                android:id="@+id/button_save"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/button_background"
-                android:text="save"
-                android:textAllCaps="true"
-                android:textColor="#FFFF" />
+                android:layout_marginBottom="7dp"
+                android:text="Add Details"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorPrimaryDark" />
 
 
             <EditText
@@ -98,14 +97,15 @@
                 android:padding="10dp" />
 
 
-            <TextView
+            <Button
+                android:id="@+id/button_save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:text="Add Details"
-                android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="@color/colorPrimaryDark" />
+                android:layout_marginTop="7dp"
+                android:background="@drawable/button_background"
+                android:text="save"
+                android:textAllCaps="true"
+                android:textColor="#FFFF" />
 
             <TextView
                 android:id="@+id/textview_view_details"
