@@ -154,12 +154,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date/Time : "
+                android:textStyle="bold"
                 android:textSize="12sp" />
 
         </LinearLayout>
 
 
     </RelativeLayout>
+
+    <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
+         android:id="@+id/fab3"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentEnd="true"
+         android:layout_marginTop="8dp"
+         android:src="@drawable/ic_attendance"
+         android:visibility="visible"
+         app:elevation="5dp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toEndOf="@+id/fab"
+         app:layout_constraintTop_toTopOf="parent" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"

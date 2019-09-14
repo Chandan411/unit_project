@@ -78,7 +78,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
         adapter = new DetailsAdapter(options);
 
         recyclerView  = findViewById(R.id.recyclerview_details);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
