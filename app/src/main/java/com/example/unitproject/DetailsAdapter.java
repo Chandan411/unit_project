@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAdapter.DetailsHolder> {
+
+    private OnItemClickListener listener;
 
     public DetailsAdapter(@NonNull FirestoreRecyclerOptions<Details> options) {
         super(options);
@@ -34,6 +37,14 @@ public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAda
         return new DetailsHolder(v);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
     class DetailsHolder extends RecyclerView.ViewHolder {
 
         TextView name,personal_no,mobile,dob,address;
@@ -47,7 +58,15 @@ public class DetailsAdapter extends FirestoreRecyclerAdapter<Details, DetailsAda
             dob = itemview.findViewById(R.id.textview_dob);
             address = itemview.findViewById(R.id.textview_address);
 
-
+            itemview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
     }
 }

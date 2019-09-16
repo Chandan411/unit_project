@@ -22,7 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -34,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     FloatingActionButton floatingActionButton, fab2;
     EditText txt_name, txt_personal_no, txt_mobile, txt_dob, txt_address;
     Button btn_save, btn_present, btn_civil;
-    TextView txt_viewDetails, txt_dateTime;
+    TextView txt_viewDetails, txt_dateTime, txt_user_detail;
     LinearLayout add_detail_layout, attendace_layout;
     private Toolbar mTopToolbar;
     private FirebaseFirestore firestore;
@@ -45,10 +44,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_profile);
 
         firestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+       /* FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
-        firestore.setFirestoreSettings(settings);
+        firestore.setFirestoreSettings(settings);*/
 
         mTopToolbar = findViewById(R.id.toolbar);
         mTopToolbar.setTitle("Add Sewadal Member Detail");
@@ -66,6 +65,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         add_detail_layout = findViewById(R.id.layout_profile_detail);
         attendace_layout = findViewById(R.id.layout_attendance);
         txt_dateTime = findViewById(R.id.current_date_view);
+        txt_user_detail = findViewById(R.id.user_detail);
         btn_present = findViewById(R.id.present);
         btn_civil = findViewById(R.id.civil);
 
@@ -76,6 +76,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         floatingActionButton.setOnClickListener(this);
         txt_viewDetails.setOnClickListener(this);
         fab2.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent i = getIntent();
+        String name = i.getStringExtra("user_name");
+        String personal_no = i.getStringExtra("user_personal");
+        String mobile = i.getStringExtra("user_mobile");
+        String dob = i.getStringExtra("user_dob");
+        String address = i.getStringExtra("user_address");
+        txt_user_detail.setText("DETAILS : "
+                + "\nName : " + name
+                + "\nPersonal No. : " + personal_no
+                + "\nMobile : " + mobile
+                + "\nDOB : " + dob
+                + "\nAddress : " + address);
     }
 
     private boolean validateInputs(String name, String personal_no, String mobile, String dob, String address) {

@@ -157,6 +157,14 @@
                 android:textStyle="bold"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/user_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details : "
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
         </LinearLayout>
 
 
