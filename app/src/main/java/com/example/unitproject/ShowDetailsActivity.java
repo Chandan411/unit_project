@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
     private DetailsAdapter adapter;
 
     RecyclerView recyclerView;
+    SearchView searchView;
 
     FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
             .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
@@ -40,6 +42,9 @@ public class ShowDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_details);
+
+        searchView = findViewById(R.id.search_bar);
+
 
         setUpRecyclerView();
 
@@ -85,6 +90,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        
 
         adapter.setOnItemClickListener(new DetailsAdapter.OnItemClickListener() {
             @Override
