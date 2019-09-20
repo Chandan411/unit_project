@@ -1,9 +1,10 @@
 package com.example.unitproject;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,20 +47,24 @@ public class ShowDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_details);
 
-        searchView = findViewById(R.id.search_bar);
-
-
-        setUpRecyclerView();
-
-    }
-
-    private void setUpRecyclerView() {
         db = FirebaseFirestore.getInstance();
         db.setFirestoreSettings(settings);
 
         detailsRef = db.collection("details");
 
+
+        Client client = new Client("YourApplicationID", "YourAPIKey");
+        Index index = client.getIndex("your_index_name");
+
+        setUpRecyclerView();
+        ItemClicked();
+
+    }
+
+    private void setUpRecyclerView() {
+
         Query query = detailsRef.orderBy("name", Query.Direction.ASCENDING);
+
         FirestoreRecyclerOptions<Details> options = new FirestoreRecyclerOptions.Builder<Details>()
                 .setQuery(query, Details.class)
                 .build();
@@ -88,10 +96,42 @@ public class ShowDetailsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerview_details);
         //recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        
 
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = findViewById(R.id.search_bar);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+               /* Query query_search = db.collection("details");
+                query_search.whereEqualTo("name",query);*/
+
+                search(query);
+                adapter.startListening();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // getSearch(newText);
+                return false;
+
+            }
+        });
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    public void ItemClicked() {
         adapter.setOnItemClickListener(new DetailsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
@@ -100,13 +140,12 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 details.getName();
                 details.getAddress();
                 Log.d("test", "Name :" + details.getName() + " Address :" + details.getAddress());
-                Toast.makeText(ShowDetailsActivity.this, "Name :" + details.getName()
+               /* Toast.makeText(ShowDetailsActivity.this, "Name :" + details.getName()
                                 + "Personal No. :" + details.getPersonal_number()
                                 + "Mobile : " + details.getMobile()
                                 + "DOB :" + details.getDob()
                                 + "Address :" + details.getAddress()
-                        , Toast.LENGTH_SHORT).show();
-
+                        , Toast.LENGTH_SHORT).show();*/
 
                 Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
                 i.putExtra("user_name", details.getName());
@@ -118,6 +157,26 @@ public class ShowDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void search(String s) {
+
+        Query query = db.collection("details").whereEqualTo("name", s);
+
+        final FirestoreRecyclerOptions<Details> options = new FirestoreRecyclerOptions.Builder<Details>()
+                .setQuery(query, Details.class)
+                .build();
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                adapter = new DetailsAdapter(options);
+                recyclerView.swapAdapter(adapter, true);
+                adapter.notifyDataSetChanged();
+                adapter.startListening();
+            }
+        });
+    }
+
 
     @Override
     protected void onStart() {
