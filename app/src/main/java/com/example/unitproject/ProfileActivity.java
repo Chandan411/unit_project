@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
-    FloatingActionButton floatingActionButton, fab2;
+    FloatingActionButton floatingActionButton, fab2, fab3;
     EditText txt_name, txt_personal_no, txt_mobile, txt_dob, txt_address;
     Button btn_save, btn_present, btn_civil;
     TextView txt_viewDetails, txt_dateTime, txt_user_detail;
@@ -62,6 +62,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         txt_viewDetails = findViewById(R.id.textview_view_details);
         floatingActionButton = findViewById(R.id.fab);
         fab2 = findViewById(R.id.fab2);
+        fab3 = findViewById(R.id.fab3);
         add_detail_layout = findViewById(R.id.layout_profile_detail);
         attendace_layout = findViewById(R.id.layout_attendance);
         txt_dateTime = findViewById(R.id.current_date_view);
@@ -76,13 +77,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         floatingActionButton.setOnClickListener(this);
         txt_viewDetails.setOnClickListener(this);
         fab2.setOnClickListener(this);
+        fab3.setOnClickListener(this);
 
+        txt_user_detail.setVisibility(View.GONE);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         Intent i = getIntent();
         String name = i.getStringExtra("user_name");
         String personal_no = i.getStringExtra("user_personal");
@@ -95,7 +99,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 + "\nMobile : " + mobile
                 + "\nDOB : " + dob
                 + "\nAddress : " + address);
+        txt_user_detail.setVisibility(View.VISIBLE);
     }
+
 
     private boolean validateInputs(String name, String personal_no, String mobile, String dob, String address) {
         if (name.isEmpty()) {
@@ -198,6 +204,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     .duration(700)
                     .playOn(attendace_layout);
 
+        }
+        if (view == fab3) {
+            // Toast.makeText(this, "view details clicked", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, ShowDetailsActivity.class));
         }
         if (view == txt_viewDetails) {
             // Toast.makeText(this, "view details clicked", Toast.LENGTH_SHORT).show();

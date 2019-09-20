@@ -154,34 +154,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date/Time : "
+                android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/user_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Details : "
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
                 android:textStyle="normal" />
 
         </LinearLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:src="@drawable/ic_assignment_black_24dp"
+            android:visibility="visible"
+            app:elevation="5dp" />
+
 
     </RelativeLayout>
-
-    <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
-         android:id="@+id/fab3"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentEnd="true"
-         android:layout_marginTop="8dp"
-         android:src="@drawable/ic_attendance"
-         android:visibility="visible"
-         app:elevation="5dp"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toEndOf="@+id/fab"
-         app:layout_constraintTop_toTopOf="parent" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"

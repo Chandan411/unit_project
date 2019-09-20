@@ -12,8 +12,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.algolia.search.saas.Client;
-import com.algolia.search.saas.Index;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,12 +50,8 @@ public class ShowDetailsActivity extends AppCompatActivity {
 
         detailsRef = db.collection("details");
 
-
-        Client client = new Client("YourApplicationID", "YourAPIKey");
-        Index index = client.getIndex("your_index_name");
-
         setUpRecyclerView();
-        ItemClicked();
+        // ItemClicked();
 
     }
 
@@ -110,15 +104,14 @@ public class ShowDetailsActivity extends AppCompatActivity {
                /* Query query_search = db.collection("details");
                 query_search.whereEqualTo("name",query);*/
 
-                search(query);
-                adapter.startListening();
-
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 // getSearch(newText);
+                search(newText);
+                adapter.startListening();
                 return false;
 
             }
@@ -128,7 +121,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
-
+        ItemClicked();
     }
 
     public void ItemClicked() {
@@ -137,10 +130,10 @@ public class ShowDetailsActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Details details = documentSnapshot.toObject(Details.class);
                 String id = documentSnapshot.getId();
-                details.getName();
+                /*details.getName();
                 details.getAddress();
                 Log.d("test", "Name :" + details.getName() + " Address :" + details.getAddress());
-               /* Toast.makeText(ShowDetailsActivity.this, "Name :" + details.getName()
+                Toast.makeText(ShowDetailsActivity.this, "Name :" + details.getName()
                                 + "Personal No. :" + details.getPersonal_number()
                                 + "Mobile : " + details.getMobile()
                                 + "DOB :" + details.getDob()
@@ -151,7 +144,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 i.putExtra("user_name", details.getName());
                 i.putExtra("user_personal", String.valueOf(details.getPersonal_number()));
                 i.putExtra("user_mobile", String.valueOf(details.getMobile()));
-                i.putExtra("user_dob", details.getDob());
+                i.putExtra("user_dob", String.valueOf(details.getDob()));
                 i.putExtra("user_address", details.getAddress());
                 startActivity(i);
             }
@@ -170,9 +163,13 @@ public class ShowDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 adapter = new DetailsAdapter(options);
-                recyclerView.swapAdapter(adapter, true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                //recyclerView.swapAdapter(adapter, true);
+                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 adapter.startListening();
+                ItemClicked();
+
             }
         });
     }
