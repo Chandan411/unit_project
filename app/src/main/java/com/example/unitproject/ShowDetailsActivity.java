@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -32,8 +40,11 @@ public class ShowDetailsActivity extends AppCompatActivity {
 
     private DetailsAdapter adapter;
 
+    Button btn_ads;
+
     RecyclerView recyclerView;
     SearchView searchView;
+    private RewardedVideoAd mRewardedVideoAd;
 
     FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
             .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
@@ -45,8 +56,72 @@ public class ShowDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_details);
 
+        // Initialize the Mobile Ads SDK.
+        MobileAds.initialize(this, getString(R.string.admob_app_id));
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+
+
+        mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+                Toast.makeText(getBaseContext(), "You get reward of : " + rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdLoaded() {
+                Toast.makeText(getBaseContext(), "Ad loaded.", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+                Toast.makeText(getBaseContext(), "Ad opened.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+                Toast.makeText(getBaseContext(), "Ad started.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+                Toast.makeText(getBaseContext(), "Ad closed.", Toast.LENGTH_SHORT).show();
+                mRewardedVideoAd.loadAd(getString(R.string.ad_unit_id), new AdRequest.Builder().build());
+
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+                Toast.makeText(getBaseContext(), "Ad left application.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+                Toast.makeText(getBaseContext(), "Ad failed to load.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoCompleted() {
+                Toast.makeText(getBaseContext(), "Reward Completed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //Load Rewarded Ad
+        mRewardedVideoAd.loadAd(getString(R.string.ad_unit_id), new AdRequest.Builder().build());
+
+        btn_ads = findViewById(R.id.ads_btn);
+        btn_ads.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mRewardedVideoAd.isLoaded()) {
+                    mRewardedVideoAd.show();
+                }
+            }
+        });
+
         db = FirebaseFirestore.getInstance();
         db.setFirestoreSettings(settings);
+
 
         detailsRef = db.collection("details");
 

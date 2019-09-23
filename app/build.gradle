@@ -39,4 +39,6 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
 
     implementation 'com.algolia:algoliasearch-android:3.+@aar'
+
+    implementation 'com.google.firebase:firebase-ads:18.2.0'
 }

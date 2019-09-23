@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseAuth firebaseAuth;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (firebaseAuth.getCurrentUser() != null) {
             //user is already logged in
             //finish();
-            //startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(new Intent(this, ProfileActivity.class));
             Log.d("test", "inside get current user");
         }
+
 
         progressDialog = new ProgressDialog(this);
 
@@ -105,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.hide();
         }
         if (view == signup) {
+
+
             //will open register activity
             startActivity(new Intent(this, RegisterActivity.class));
         }
