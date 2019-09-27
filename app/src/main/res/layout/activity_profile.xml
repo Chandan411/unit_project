@@ -41,6 +41,15 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorPrimaryDark" />
 
+            <EditText
+                android:id="@+id/edittext_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edittext_background"
+                android:hint="Full Name"
+                android:padding="10dp" />
 
             <EditText
                 android:id="@+id/edittext_personal_no"
@@ -84,16 +93,6 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/edittext_background"
                 android:hint="Address"
-                android:padding="10dp" />
-
-            <EditText
-                android:id="@+id/edittext_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Full Name"
                 android:padding="10dp" />
 
 

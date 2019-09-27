@@ -2,6 +2,7 @@ package com.example.unitproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     FloatingActionButton floatingActionButton, fab2, fab3;
@@ -37,6 +40,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     LinearLayout add_detail_layout, attendace_layout;
     private Toolbar mTopToolbar;
     private FirebaseFirestore firestore;
+
+    String attendance_type;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,7 +180,31 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public void markAttendance() {
+        Intent i = getIntent();
+        String name = i.getStringExtra("user_name");
+        String personal_no = i.getStringExtra("user_personal");
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        DocumentReference dbAttendance = firestore.collection("attendance").document(name);
+        final Map<String, Object> attend = new HashMap<>();
+        attend.put("name", name);
+        attend.put("personal_number", personal_no);
+        attend.put("attendance", currentTime);
+        attend.put("type", attendance_type);
+
+        dbAttendance.set(attend).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.e("test", attend.toString());
+                Toast.makeText(ProfileActivity.this, "Attendance Marked Succefully", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void captureDateTime() {
+        markAttendance();
         Date currentTime = Calendar.getInstance().getTime();
         txt_dateTime.setText("Date & Time : " + currentTime);
     }
@@ -186,8 +215,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             saveDetails();
         }
 
-        if (view == btn_present || view == btn_civil) {
-            captureDateTime();
+        if (view == btn_present) {
+            attendance_type = "vardi";
+            captureDateTime();   //Adding data to database
+
+        }
+        if (view == btn_civil) {
+            attendance_type = "civil";
+            captureDateTime();    //Adding data to database
         }
         if (view == floatingActionButton) {
             add_detail_layout.setVisibility(View.VISIBLE);
