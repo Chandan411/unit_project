@@ -2,7 +2,6 @@ package com.example.unitproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -140,7 +139,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         String address = txt_address.getText().toString().trim();
 
         if (!validateInputs(name, personal_number, mobile, dob, address)) {
-            CollectionReference dbDetails = firestore.collection("details");
+            // DocumentReference dbDetails = firestore.collection("details").document(name).collection("MyAttendance").document(name+"_"+personal_number);
+            //CollectionReference dbDetails = firestore.collection("details");
+            DocumentReference dbDetails = firestore.collection("details").document(name);
             try {
 
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -154,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         address
                 );
 
-                dbDetails.add(details)
+               /* dbDetails.set(details)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
@@ -166,6 +167,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 txt_address.getText().clear();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });*/
+
+                dbDetails.set(details).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(ProfileActivity.this, "Details Added Successfully", Toast.LENGTH_SHORT).show();
+                        txt_name.getText().clear();
+                        txt_personal_no.getText().clear();
+                        txt_dob.getText().clear();
+                        txt_mobile.getText().clear();
+                        txt_address.getText().clear();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -187,18 +205,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        DocumentReference dbAttendance = firestore.collection("attendance").document(name);
+        CollectionReference dbAttendance = firestore.collection("attendance");
         final Map<String, Object> attend = new HashMap<>();
         attend.put("name", name);
         attend.put("personal_number", personal_no);
         attend.put("attendance", currentTime);
         attend.put("type", attendance_type);
 
-        dbAttendance.set(attend).addOnSuccessListener(new OnSuccessListener<Void>() {
+        dbAttendance.add(attend).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Log.e("test", attend.toString());
-                Toast.makeText(ProfileActivity.this, "Attendance Marked Succefully", Toast.LENGTH_SHORT).show();
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(ProfileActivity.this, "Attendance Marked Successfully", Toast.LENGTH_SHORT).show();
             }
         });
     }
