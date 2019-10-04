@@ -205,12 +205,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        CollectionReference dbAttendance = firestore.collection("attendance");
+        CollectionReference dbAttendance = firestore.collection("user-attendance").document(name).collection("attendance");
+        //CollectionReference dbAttendance = firestore.collection("attendance");
         final Map<String, Object> attend = new HashMap<>();
         attend.put("name", name);
         attend.put("personal_number", personal_no);
         attend.put("attendance", currentTime);
         attend.put("type", attendance_type);
+
 
         dbAttendance.add(attend).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

@@ -26,7 +26,7 @@
             android:name=".ProfileActivity"
             android:launchMode="singleTop" />
         <activity android:name=".ShowDetailsActivity">
-            <!-- android:parentActivityName=".ProfileActivity"--> >
+            <!-- android:parentActivityName=".ProfileActivity"-->
 
         </activity>
 

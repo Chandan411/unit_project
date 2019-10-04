@@ -24,11 +24,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText txt_email, txt_password;
     private Button login;
     private TextView signup;
-
     private ProgressDialog progressDialog;
-
     private FirebaseAuth firebaseAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         progressDialog = new ProgressDialog(this);
-
         txt_email = findViewById(R.id.editTextEmail);
         txt_password = findViewById(R.id.editTextPassword);
         login = findViewById(R.id.buttonlogin);
@@ -58,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void LoginUser() {
-
         String email = txt_email.getText().toString().trim();
         String password = txt_password.getText().toString().trim();
 
@@ -88,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-
                         } else {
                             Toast.makeText(MainActivity.this, "Login failed...try again", Toast.LENGTH_SHORT).show();
                             progressDialog.hide();
@@ -96,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 });
-
     }
 
 
@@ -107,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.hide();
         }
         if (view == signup) {
-
-
             //will open register activity
             startActivity(new Intent(this, RegisterActivity.class));
         }
