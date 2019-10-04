@@ -2,6 +2,7 @@ package com.example.unitproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseFirestore firestore;
 
     String attendance_type;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,24 +157,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         address
                 );
 
-               /* dbDetails.set(details)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(ProfileActivity.this, "Details Added Successfully", Toast.LENGTH_SHORT).show();
-                                txt_name.getText().clear();
-                                txt_personal_no.getText().clear();
-                                txt_dob.getText().clear();
-                                txt_mobile.getText().clear();
-                                txt_address.getText().clear();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });*/
-
                 dbDetails.set(details).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -205,6 +189,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Date currentTime = Calendar.getInstance().getTime();
 
+
+        Log.e("test", "date result:" + currentTime);
+
         CollectionReference dbAttendance = firestore.collection("user-attendance").document(name).collection("attendance");
         //CollectionReference dbAttendance = firestore.collection("attendance");
         final Map<String, Object> attend = new HashMap<>();
@@ -225,7 +212,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void captureDateTime() {
         markAttendance();
         Date currentTime = Calendar.getInstance().getTime();
-        txt_dateTime.setText("Date & Time : " + currentTime);
+
+        String simpleDate = new SimpleDateFormat("MM-dd-yyyy hh:mm a").format(currentTime);
+        Log.v("output date ", simpleDate);
+
+        txt_dateTime.setText("Date & Time : " + simpleDate);
     }
 
     @Override
