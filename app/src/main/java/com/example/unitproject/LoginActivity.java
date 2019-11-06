@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText txt_email, txt_password;
     private Button login;
@@ -80,11 +80,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //Registration success & start login activity
                             Log.d("Firebase", "Login Successful...");
                             //progressDialog.hide();
-                            Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         } else {
-                            Toast.makeText(MainActivity.this, "Login failed...try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login failed...try again", Toast.LENGTH_SHORT).show();
                             progressDialog.hide();
                             txt_password.getText().clear();
                         }

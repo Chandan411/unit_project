@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
-    FloatingActionButton floatingActionButton, fab2, fab3;
+    FloatingActionButton floatingActionButton, fab_markAttendance, fab_showdata;
     EditText txt_name, txt_personal_no, txt_mobile, txt_dob, txt_address;
     Button btn_save, btn_present, btn_civil;
     TextView txt_viewDetails, txt_dateTime, txt_user_detail;
@@ -67,8 +68,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btn_save = findViewById(R.id.button_save);
         txt_viewDetails = findViewById(R.id.textview_view_details);
         floatingActionButton = findViewById(R.id.fab);
-        fab2 = findViewById(R.id.fab2);
-        fab3 = findViewById(R.id.fab3);
+        fab_markAttendance = findViewById(R.id.fab_markAttendance);
+        fab_showdata = findViewById(R.id.fab_showdata);
         add_detail_layout = findViewById(R.id.layout_profile_detail);
         attendace_layout = findViewById(R.id.layout_attendance);
         txt_dateTime = findViewById(R.id.current_date_view);
@@ -82,8 +83,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btn_civil.setOnClickListener(this);
         floatingActionButton.setOnClickListener(this);
         txt_viewDetails.setOnClickListener(this);
-        fab2.setOnClickListener(this);
-        fab3.setOnClickListener(this);
+        fab_markAttendance.setOnClickListener(this);
+        fab_showdata.setOnClickListener(this);
 
         txt_user_detail.setVisibility(View.GONE);
 
@@ -141,8 +142,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         String address = txt_address.getText().toString().trim();
 
         if (!validateInputs(name, personal_number, mobile, dob, address)) {
-            // DocumentReference dbDetails = firestore.collection("details").document(name).collection("MyAttendance").document(name+"_"+personal_number);
-            //CollectionReference dbDetails = firestore.collection("details");
             DocumentReference dbDetails = firestore.collection("details").document(name);
             try {
 
@@ -182,6 +181,71 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    //=======================UPDATE USER DETAILS======================
+    public void updateDetails() {
+        Intent i = getIntent();
+        String fetchedName = i.getStringExtra("user_name");
+        String fetchedPersonalNumber = i.getStringExtra("user_personal");
+
+        add_detail_layout.setVisibility(View.VISIBLE);
+        attendace_layout.setVisibility(View.GONE);
+        YoYo.with(Techniques.FadeIn)
+                .duration(700)
+                .playOn(add_detail_layout);
+
+        txt_name.setText(fetchedName);
+        txt_personal_no.setText(fetchedPersonalNumber);
+
+
+        String name = txt_name.getText().toString().trim();
+        String personal_number = txt_personal_no.getText().toString().trim();
+        String mobile = txt_mobile.getText().toString().trim();
+        String dob = txt_dob.getText().toString().trim();
+        String address = txt_address.getText().toString().trim();
+
+        if (!validateInputs(name, personal_number, mobile, dob, address)) {
+            DocumentReference dbDetails = firestore.collection("details").document(name);
+            try {
+
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = df.parse(dob);
+
+                Details details = new Details(
+                        name,
+                        Integer.parseInt(personal_number),
+                        Long.parseLong(mobile),
+                        date,
+                        address
+                );
+
+                dbDetails.set(details, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(ProfileActivity.this, "Details Added Successfully", Toast.LENGTH_SHORT).show();
+                        txt_name.getText().clear();
+                        txt_personal_no.getText().clear();
+                        txt_dob.getText().clear();
+                        txt_mobile.getText().clear();
+                        txt_address.getText().clear();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    //=======================MARK ATTENDANCE OF THE USER======================
     public void markAttendance() {
         Intent i = getIntent();
         String name = i.getStringExtra("user_name");
@@ -189,7 +253,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Date currentTime = Calendar.getInstance().getTime();
 
-
+        i.putExtra("attendance_date", currentTime);
         Log.e("test", "date result:" + currentTime);
 
         CollectionReference dbAttendance = firestore.collection("user-attendance").document(name).collection("attendance");
@@ -242,7 +306,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     .playOn(add_detail_layout);
         }
 
-        if (view == fab2) {
+        if (view == fab_markAttendance) {
             add_detail_layout.setVisibility(View.GONE);
             attendace_layout.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.FadeIn)
@@ -250,13 +314,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     .playOn(attendace_layout);
 
         }
-        if (view == fab3) {
+        if (view == fab_showdata) {
             // Toast.makeText(this, "view details clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, ShowDetailsActivity.class));
         }
         if (view == txt_viewDetails) {
             // Toast.makeText(this, "view details clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, ShowDetailsActivity.class));
+
         }
     }
 }

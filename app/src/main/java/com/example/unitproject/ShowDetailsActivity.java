@@ -24,6 +24,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -126,6 +127,8 @@ public class ShowDetailsActivity extends AppCompatActivity {
         detailsRef = db.collection("details");
 
         setUpRecyclerView();
+
+        SeeData();
         // ItemClicked();
 
     }
@@ -205,15 +208,6 @@ public class ShowDetailsActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Details details = documentSnapshot.toObject(Details.class);
                 String id = documentSnapshot.getId();
-                /*details.getName();
-                details.getAddress();
-                Log.d("test", "Name :" + details.getName() + " Address :" + details.getAddress());
-                Toast.makeText(ShowDetailsActivity.this, "Name :" + details.getName()
-                                + "Personal No. :" + details.getPersonal_number()
-                                + "Mobile : " + details.getMobile()
-                                + "DOB :" + details.getDob()
-                                + "Address :" + details.getAddress()
-                        , Toast.LENGTH_SHORT).show();*/
 
                 Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
                 i.putExtra("user_name", details.getName());
@@ -222,6 +216,9 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 i.putExtra("user_dob", String.valueOf(details.getDob()));
                 i.putExtra("user_address", details.getAddress());
                 startActivity(i);
+
+               /* Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+                startActivity(intent);*/
             }
         });
     }
@@ -249,6 +246,23 @@ public class ShowDetailsActivity extends AppCompatActivity {
         });
     }
 
+    public void SeeData() {
+
+        Intent i = getIntent();
+        String dateTime = i.getStringExtra("attendance_date");
+
+        final DocumentReference documentReference = db.collection("details").document("name");
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+
+                    Log.e("test", "docValue :" + documentSnapshot.getString("name"));
+                    Log.e("test", "docValue :" + documentSnapshot.getString("attendance"));
+                }
+            }
+        });
+    }
 
     @Override
     protected void onStart() {
