@@ -1,53 +1,65 @@
 package com.example.unitproject;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserDetailsActivity extends AppCompatActivity {
 
-    TextView txt_user_details;
-    private FirebaseFirestore firestore;
+    SharedPreferences sharedPreferences;
+    TextView txt_user_details, attendance_count;
+    String TAG = "UNIT PROJECT";
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
 
-        firestore = FirebaseFirestore.getInstance();
+        sharedPreferences = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
 
-        DocumentReference documentReference = firestore.collection("details").document();
-        documentReference.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Details details = documentSnapshot.toObject(Details.class);
-                            String str = details.getName()
-                                    + "\n" + details.getPersonal_number()
-                                    + "\n" + details.getDob()
-                                    + "\n" + details.getMobile()
-                                    + "\n" + details.getAddress();
+        txt_user_details = findViewById(R.id.user_data);
+        attendance_count = findViewById(R.id.attendance_count);
 
-                            Toast.makeText(UserDetailsActivity.this, "testtttt", Toast.LENGTH_SHORT).show();
+        Intent i = getIntent();
+        final String name = i.getStringExtra("user_name");
+        final String personal_no = i.getStringExtra("user_personal");
+        final String mobile = i.getStringExtra("user_mobile");
+        final String dob = i.getStringExtra("user_dob");
+        final String address = i.getStringExtra("user_address");
 
-                            Log.e("test", "str values : " + str);
+        final String username = sharedPreferences.getString("username", "");
 
-                            txt_user_details.setText(str);
+        this.db = FirebaseFirestore.getInstance();
+        CollectionReference dbAttendance = db.collection("user-attendance").document(username).collection("attendance");
+        dbAttendance.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                queryDocumentSnapshots.getDocuments();
+                int size = queryDocumentSnapshots.size();
+                Log.e(TAG, "Number of Documents : " + queryDocumentSnapshots.size());
 
-                        }
-                    }
-                });
+                txt_user_details.setText("Name : " + username);
+                                       /* +"\nPersonal No : "+personal_no
+                                        +"\nMobile : "+mobile
+                                        +"\nDate Of Birth : "+dob
+                                        +"\nAddress : "+address);*/
+                attendance_count.setText("Total Attendance : " + size);
+            }
+        });
 
-        txt_user_details = findViewById(R.id.user_detail);
     }
+
+
 }

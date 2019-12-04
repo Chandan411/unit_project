@@ -3,6 +3,7 @@ package com.example.unitproject;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +41,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
     private CollectionReference detailsRef;
 
     private DetailsAdapter adapter;
+    SharedPreferences sharedPreferences;
 
     Button btn_ads;
 
@@ -56,6 +58,8 @@ public class ShowDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_details);
+
+        sharedPreferences = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
 
         // Initialize the Mobile Ads SDK.
         MobileAds.initialize(this, getString(R.string.admob_app_id));
@@ -216,6 +220,14 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 i.putExtra("user_dob", String.valueOf(details.getDob()));
                 i.putExtra("user_address", details.getAddress());
                 startActivity(i);
+
+                //Putting users data(only one user) into sharedPrefs on click of UsersList
+                sharedPreferences.edit().putString("username", details.getName()).apply();
+                sharedPreferences.edit().putString("personal_no", String.valueOf(details.getPersonal_number())).apply();
+                sharedPreferences.edit().putString("mobile", String.valueOf(details.getMobile())).apply();
+                sharedPreferences.edit().putString("dob", String.valueOf(details.getDob())).apply();
+                sharedPreferences.edit().putString("address", String.valueOf(details.getAddress())).apply();
+
 
                /* Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
                 startActivity(intent);*/

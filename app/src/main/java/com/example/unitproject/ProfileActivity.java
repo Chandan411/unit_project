@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -41,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     LinearLayout add_detail_layout, attendace_layout;
     private Toolbar mTopToolbar;
     private FirebaseFirestore firestore;
+    CardView cardviewDetails;
 
     String attendance_type;
 
@@ -76,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         txt_user_detail = findViewById(R.id.user_detail);
         btn_present = findViewById(R.id.present);
         btn_civil = findViewById(R.id.civil);
+        cardviewDetails = findViewById(R.id.cardView_details);
 
 
         btn_save.setOnClickListener(this);
@@ -87,6 +90,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         fab_showdata.setOnClickListener(this);
 
         txt_user_detail.setVisibility(View.GONE);
+
+        cardviewDetails.setVisibility(View.VISIBLE);
+
+        YoYo.with(Techniques.FadeIn)
+                .duration(700)
+                .playOn(cardviewDetails);
+
 
     }
 
@@ -269,6 +279,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(ProfileActivity.this, "Attendance Marked Successfully", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(ProfileActivity.this, UserDetailsActivity.class);
+                startActivity(i);
             }
         });
     }

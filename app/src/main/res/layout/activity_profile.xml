@@ -173,6 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardBackgroundColor="@color/pink_200"
+                android:visibility="gone"
                 app:cardCornerRadius="10dp">
 
                 <TextView
