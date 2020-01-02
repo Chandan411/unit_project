@@ -1,6 +1,9 @@
 package com.example.unitproject;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,13 +21,16 @@ import androidx.cardview.widget.CardView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -96,6 +102,27 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         YoYo.with(Techniques.FadeIn)
                 .duration(700)
                 .playOn(cardviewDetails);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel =
+                    new NotificationChannel("MyNotifications", "MyNotifications", NotificationManager.IMPORTANCE_DEFAULT);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+
+        FirebaseMessaging.getInstance().subscribeToTopic("general")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Successful";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed";
+                        }
+                        Toast.makeText(ProfileActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
     }
