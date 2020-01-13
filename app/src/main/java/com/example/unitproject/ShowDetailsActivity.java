@@ -199,7 +199,6 @@ public class ShowDetailsActivity extends AppCompatActivity {
             }
         });
 
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);

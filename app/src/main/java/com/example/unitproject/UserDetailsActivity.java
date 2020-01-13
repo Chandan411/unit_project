@@ -18,9 +18,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class UserDetailsActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
-    TextView txt_user_details, attendance_count;
+    TextView txt_user_details, attendance_count, att_name, att_count;
     String TAG = "UNIT PROJECT";
     private FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,8 +30,14 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
 
-        txt_user_details = findViewById(R.id.user_data);
+        att_name = findViewById(R.id.name);
+        att_count = findViewById(R.id.count);
+
+
+
+        /*txt_user_details = findViewById(R.id.user_data);
         attendance_count = findViewById(R.id.attendance_count);
+        */
 
         Intent i = getIntent();
         final String name = i.getStringExtra("user_name");
@@ -50,15 +57,10 @@ public class UserDetailsActivity extends AppCompatActivity {
                 int size = queryDocumentSnapshots.size();
                 Log.e(TAG, "Number of Documents : " + queryDocumentSnapshots.size());
 
-                txt_user_details.setText("Name : " + username);
-                                       /* +"\nPersonal No : "+personal_no
-                                        +"\nMobile : "+mobile
-                                        +"\nDate Of Birth : "+dob
-                                        +"\nAddress : "+address);*/
-                attendance_count.setText("Total Attendance : " + size);
+                att_name.setText(("" + username));
+                att_count.setText("" + size);
             }
         });
-
     }
 
 
